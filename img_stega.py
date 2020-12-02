@@ -26,6 +26,7 @@ def str_encode_to_img(s, img):
 
     # 写入字符串长度信息
     x, y, z = 0, 0, 0
+    # 从后往前依次填充字符串长度对应的二进制位 到图像前8个像素
     for i in range(len(s_bit_length_bytes)-1, -1, -1):
         bit = s_bit_length_bytes[i]
         channel = img[x][y][z]
@@ -112,7 +113,6 @@ def str_decode_from_img(img):
                 if x < X-1:
                     x += 1
         n += 1
-
     s = s[::-1]
     length = int(s, 2)
     print('Decoded string bit length:', length)
@@ -146,13 +146,16 @@ def str_decode_from_img(img):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('raw.png')
+    # string you want to encode
     s = 'Hello,world!'
     print('String unencoded:', s)
 
+    # encode string to img
+    img = cv2.imread('raw.png')
     img = str_encode_to_img(s, img)
     cv2.imwrite('encoded.png', img)
 
+    # decode string from img
     img = cv2.imread('encoded.png')
     s = str_decode_from_img(img)
     print('Decoded string:', s)
